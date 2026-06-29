@@ -18,6 +18,7 @@
 ![37個の組み合わせ](./screenshots/Calendar×37.png)
 
 
+---
 ## STEP 1 ユーザーフォームを作成
 
 ![ユーザーフォーム](./screenshots/frmCalendar.png)
@@ -25,6 +26,7 @@
 - フォームの名前を `frmCalendar` に変更（プロパティウィンドウの `(Name)` 欄）
 
 
+---
 ## STEP 2 フォームにパーツを配置
 
 ツールボックスから以下のパーツを配置します。
@@ -48,6 +50,7 @@
 > 💡ˎˊ˗ ラベルは `BorderStyle = 1 (fmBorderStyleSingle)` にすると枠線が表示されてグリッドらしくなる
 
 
+---
 ## STEP 3  定数を定義する
 
 フォームのコード（`frmCalendar` をダブルクリック）の先頭に記述
@@ -62,6 +65,7 @@ Public TargetRange As Range             ' 書き込み先のセル
 ```
 
 
+---
 ## STEP 4  `SetCalendar` を実装する
 
 月と年を受け取り、カレンダーを描画するプロシージャです。
@@ -122,6 +126,7 @@ lblDay3: 2
 ```
 
 
+---
 ## STEP 5 `Initialize` を実装する
 
 フォームを開く前に呼ぶ初期化処理。すでにセルに日付が入っていればその月を、空欄なら今月を表示。
@@ -142,6 +147,8 @@ Public Sub Initialize()
 End Sub
 ```
 
+
+---
 ## STEP 6  月移動ボタンを実装する
 
 ```vba
@@ -178,6 +185,8 @@ End Sub
 
 > 💡ˎˊ˗ `DateSerial(yr, 0, 1)` のように月が0や13になっても、VBAは自動的に前月・翌月に繰り越してくれるので安全
 
+
+---
 ## STEP 7  日付クリックを実装する
 
 VBA のユーザーフォームはラベルのクリックイベントを動的にまとめられないため、37個分を個別に書く必要がある。
@@ -236,6 +245,8 @@ Private Sub lblDay36_Click() : Call OutputDate(lblDay36.Caption) : End Sub
 Private Sub lblDay37_Click() : Call OutputDate(lblDay37.Caption) : End Sub
 ```
 
+
+---
 ## STEP 8 シートから呼び出す（`Worksheet_SelectionChange`）
 
 シートのコード（シートタブを右クリック→「コードの表示」）に記述
@@ -294,6 +305,8 @@ wsKakeibo（シートモジュール）
 └── Worksheet_Deactivate()       ← シート切替で自動クローズ
 ```
 
+
+---
 ## VBA 関数のまとめ
 
 | 関数 | 用途 | 例 |
@@ -306,16 +319,18 @@ wsKakeibo（シートモジュール）
 | `Date` | 今日の日付 | `Date` → 2024/06/29 |
 | `IsDate(value)` | 日付かどうか判定 | `IsDate("2024/1/1")` → True |
 
+
+---
 ## トラブルシューティング
 
-**カレンダーの日付がずれる**
+- **カレンダーの日付がずれる**
 → `Weekday()` の第2引数で週の始まりを指定できます。`Weekday(date, vbSunday)` で日曜始まりに統一されます。
 
-**末日の翌日以降のマスに数字が入る**
+- **末日の翌日以降のマスに数字が入る**
 → `i + position` が37を超えるケースのガードが必要です。`If (i + position) <= 37 Then` で囲んでください。
 
-**セルに文字列として入ってしまう**
+- **セルに文字列として入ってしまう**
 → `TargetRange.Value = CDate(...)` や `DateSerial()` を使い、文字列ではなく日付型で書き込んでください。
 
-**フォームが最前面に出ない**
+- **フォームが最前面に出ない**
 → `frmCalendar.Show vbModeless` の前に `frmCalendar.ZOrder 0` を追加してみてください。
