@@ -1,37 +1,31 @@
 # VBA カレンダーフォームの作り方
 
----
-
-## 完成イメージ
 ![完成イメージ](./screenshots/Calendar.png)
 - セルの日付列を選択すると、カレンダーがポップアップ表示される
 - 日付をクリックするとセルに書き込まれ、カレンダーが閉じる
 - 「＜」「＞」ボタンで月を移動できる
 - 今日の日付が強調表示される
 
----
 
-## 仕組みの核心
+## 仕組み
 
-カレンダーの本質は **「`lblDay1`〜`lblDay37` という37個のラベルを7列のグリッドに並べ、月によって中身（数字）だけ入れ替える」** という仕組みです。
+カレンダーの本質は 
 
-なぜ37個かというと、月初が土曜の場合に最大6行必要で、7列×6行=42のうち実際に使う最大数が37になるためです。
+**「`lblDay1`〜`lblDay37` という37個のラベルを7列のグリッドに並べ、月によって中身（数字）だけ入れ替える」** という仕組み
+
+なぜ37個かというと、月初が土曜の場合に最大6行必要で、7列×6行=42のうち実際に使う最大数が37になるため
 
 ![37個の組み合わせ](./screenshots/Calendar×37.png)
 
----
 
-## STEP 1 — ユーザーフォームを作成する
+## STEP 1 ユーザーフォームを作成
 
-![ユーザーフォーム](./screenshots/frmCalendar×37.png)
+![ユーザーフォーム](./screenshots/frmCalendar.png)
 
-1. Excel を開き、`Alt + F11` で VBE（Visual Basic Editor）を起動
-2. メニュー「挿入」→「ユーザーフォーム」をクリック
-3. フォームの名前を `frmCalendar` に変更（プロパティウィンドウの `(Name)` 欄）
+- フォームの名前を `frmCalendar` に変更（プロパティウィンドウの `(Name)` 欄）
 
----
 
-## STEP 2 — フォームにパーツを配置する
+## STEP 2 フォームにパーツを配置
 
 ツールボックスから以下のパーツを配置します。
 
@@ -51,13 +45,12 @@
 3. 1行ごとコピーして計6行（`lblDay1`〜`lblDay42` でもよいが、37で十分）
 4. 各ラベルの `Name` を `lblDay1`, `lblDay2`, ... と順番に変更
 
-> **ヒント:** ラベルは `BorderStyle = 1 (fmBorderStyleSingle)` にすると枠線が表示されてグリッドらしくなります。
+> 💡ˎˊ˗ ラベルは `BorderStyle = 1 (fmBorderStyleSingle)` にすると枠線が表示されてグリッドらしくなる
 
----
 
-## STEP 3 — 定数を定義する
+## STEP 3  定数を定義する
 
-フォームのコード（`frmCalendar` をダブルクリック）の先頭に記述します。
+フォームのコード（`frmCalendar` をダブルクリック）の先頭に記述
 
 ```vba
 Option Explicit
@@ -68,9 +61,8 @@ Private Const COLOR_TODAY  = &H99FFFF   ' 今日の背景色（水色）
 Public TargetRange As Range             ' 書き込み先のセル
 ```
 
----
 
-## STEP 4 — `SetCalendar` を実装する（核心部分）
+## STEP 4  `SetCalendar` を実装する
 
 月と年を受け取り、カレンダーを描画するプロシージャです。
 
@@ -129,11 +121,10 @@ lblDay3: 2
 ...
 ```
 
----
 
-## STEP 5 — `Initialize` を実装する
+## STEP 5 `Initialize` を実装する
 
-フォームを開く前に呼ぶ初期化処理です。すでにセルに日付が入っていればその月を、空欄なら今月を表示します。
+フォームを開く前に呼ぶ初期化処理。すでにセルに日付が入っていればその月を、空欄なら今月を表示。
 
 ```vba
 Public Sub Initialize()
@@ -151,9 +142,7 @@ Public Sub Initialize()
 End Sub
 ```
 
----
-
-## STEP 6 — 月移動ボタンを実装する
+## STEP 6  月移動ボタンを実装する
 
 ```vba
 Private Sub lblPreMonth_Click()
@@ -187,13 +176,11 @@ Private Sub MoveNextMonth()
 End Sub
 ```
 
-> `DateSerial(yr, 0, 1)` のように月が0や13になっても、VBAは自動的に前月・翌月に繰り越してくれるので安全です。
+> 💡ˎˊ˗ `DateSerial(yr, 0, 1)` のように月が0や13になっても、VBAは自動的に前月・翌月に繰り越してくれるので安全
 
----
+## STEP 7  日付クリックを実装する
 
-## STEP 7 — 日付クリックを実装する
-
-VBA のユーザーフォームはラベルのクリックイベントを動的にまとめられないため、37個分を個別に書く必要があります。
+VBA のユーザーフォームはラベルのクリックイベントを動的にまとめられないため、37個分を個別に書く必要がある。
 
 ```vba
 ' --- 共通処理 ---
@@ -249,11 +236,9 @@ Private Sub lblDay36_Click() : Call OutputDate(lblDay36.Caption) : End Sub
 Private Sub lblDay37_Click() : Call OutputDate(lblDay37.Caption) : End Sub
 ```
 
----
+## STEP 8 シートから呼び出す（`Worksheet_SelectionChange`）
 
-## STEP 8 — シートから呼び出す（`Worksheet_SelectionChange`）
-
-シートのコード（シートタブを右クリック→「コードの表示」）に記述します。
+シートのコード（シートタブを右クリック→「コードの表示」）に記述
 
 ```vba
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
@@ -291,8 +276,6 @@ Private Sub Worksheet_Deactivate()
 End Sub
 ```
 
----
-
 ## 完成したコードの全体構成
 
 ```
@@ -311,9 +294,7 @@ wsKakeibo（シートモジュール）
 └── Worksheet_Deactivate()       ← シート切替で自動クローズ
 ```
 
----
-
-## よく使う VBA 関数のまとめ
+## VBA 関数のまとめ
 
 | 関数 | 用途 | 例 |
 |------|------|----|
@@ -324,8 +305,6 @@ wsKakeibo（シートモジュール）
 | `Year(date)` / `Month(date)` | 年・月を返す | `Year(Date)` → 今年 |
 | `Date` | 今日の日付 | `Date` → 2024/06/29 |
 | `IsDate(value)` | 日付かどうか判定 | `IsDate("2024/1/1")` → True |
-
----
 
 ## トラブルシューティング
 
