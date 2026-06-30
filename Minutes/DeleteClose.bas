@@ -4,8 +4,6 @@ Sub DeleteClose()
     Dim r   As Long
     Dim idx As Long
 
-    Set ws = ThisWorkbook.Sheets("議事録")
-
     ' CLOSE行を下から削除
     For r = 185 To 6 Step -1
         If Trim(CStr(ws.Cells(r, 5).Value)) = "CLOSE" Then
