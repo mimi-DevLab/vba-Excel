@@ -1,6 +1,6 @@
 Option Explicit
 
-' 担当者リスト（カンマ区切りで変更してください）
+' 議事録担当者リスト
 Private Const NAMES_LIST As String = "Aさん,Bさん,Cさん,Dさん"
 
 ' データ範囲・列番号定数
@@ -12,10 +12,10 @@ Private Const COL_DETAIL     As Long = 4  ' D列: 詳細内容
 Private Const COL_STATUS     As Long = 5  ' E列: 状況
 Private Const COL_NOTE       As Long = 6  ' F列: 備考
 
-' ---- [議事録作成] ボタン ----
+' ---- [議事録作成] ボタン ---- 今日話し合った内容を整理してまとめてくれる
 Sub Opening()
 
-    ' ===== 変数宣言はすべてここにまとめる（ByRefエラー防止）=====
+    ' ===== 変数宣言 =====
     Dim wsFormat      As Worksheet
     Dim wsTemplate    As Worksheet
     Dim wsNew         As Worksheet
@@ -27,9 +27,9 @@ Sub Opening()
     Dim tmpCol        As Long
     Dim tmp           As Variant
     Dim agendaList()  As Variant
-    Dim oi            As Long    ' ← ループ外で宣言（重要）
-    Dim oj            As Long    ' ← ループ外で宣言（重要）
-    Dim doSwap        As Boolean ' ← ループ外で宣言（重要）
+    Dim oi            As Long
+    Dim oj            As Long
+    Dim doSwap        As Boolean
     Dim pasteRow      As Long
     Dim lastType      As String
     Dim lastName      As String
