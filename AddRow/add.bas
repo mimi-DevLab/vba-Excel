@@ -1,10 +1,8 @@
-テーブルに新規行を追加するボタン
-
 Public Sub AddRow()
 
     Dim tbl As ListObject
 
-    Set tbl = wsSettings.ListObjects("テーブル")
+    Set tbl = wsSettings.ListObjects("繝�繝ｼ繝悶Ν")
 
     tbl.ListRows.Add
 
