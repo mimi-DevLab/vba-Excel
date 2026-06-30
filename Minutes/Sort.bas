@@ -6,8 +6,6 @@ Sub SortAgenda()
     Dim r       As Long
     Dim idx     As Long
 
-    Set ws = ThisWorkbook.Sheets("議事録")
-
     lastRow = ws.Cells(ws.Rows.Count, 2).End(xlUp).Row
     If lastRow < 6 Then
         MsgBox "並び替えるデータがありません。", vbExclamation
